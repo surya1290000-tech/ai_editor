@@ -1,0 +1,85 @@
+# ─── Hardware Profiles ────────────────────────────────────────────────────────
+#
+# Model selection based on detected hardware tier.
+# The diagnose.py script auto-selects the appropriate profile.
+# You can override by editing config/overrides.yaml (created at first run).
+# ──────────────────────────────────────────────────────────────────────────────
+
+profiles:
+
+  # CPU only, low RAM (<8 GB available)
+  cpu_only_low:
+    whisper_model: base
+    whisper_device: cpu
+    whisper_compute_type: int8
+    llm_model: gemma2:2b
+    mediapipe_complexity: 0        # 0=fastest, 1=balanced, 2=best
+    frame_sample_fps: 1            # frames extracted per second for CV analysis
+    llm_call_timeout_seconds: 90
+    description: "Low-end CPU-only mode. Reduced accuracy, faster processing."
+
+  # CPU only, standard RAM (8–16 GB available)  — THIS PROFILE FOR CURRENT MACHINE
+  cpu_only_standard:
+    whisper_model: small
+    whisper_device: cpu
+    whisper_compute_type: int8
+    llm_model: phi3.5:mini
+    mediapipe_complexity: 0
+    frame_sample_fps: 1
+    llm_call_timeout_seconds: 120
+    description: "Standard CPU-only mode. Best balance for Intel Iris Xe."
+
+  # CPU only, high RAM (>16 GB available)
+  cpu_only_high:
+    whisper_model: small
+    whisper_device: cpu
+    whisper_compute_type: int8     # float16 would be faster but needs more RAM
+    llm_model: phi3.5:mini
+    mediapipe_complexity: 1
+    frame_sample_fps: 2
+    llm_call_timeout_seconds: 120
+    description: "High-RAM CPU-only mode. Better visual analysis sampling."
+
+  # GPU, low VRAM (4–6 GB, e.g. GTX 1660)
+  gpu_low_vram:
+    whisper_model: small
+    whisper_device: cuda
+    whisper_compute_type: float16
+    llm_model: phi3.5:mini
+    mediapipe_complexity: 1
+    frame_sample_fps: 2
+    llm_call_timeout_seconds: 60
+    description: "GPU-accelerated mode, low VRAM."
+
+  # GPU, high VRAM (8+ GB, e.g. RTX 3060+)
+  gpu_high_vram:
+    whisper_model: medium
+    whisper_device: cuda
+    whisper_compute_type: float16
+    llm_model: llama3.1:8b
+    mediapipe_complexity: 1
+    frame_sample_fps: 2
+    llm_call_timeout_seconds: 45
+    description: "Full GPU-accelerated mode. Best quality."
+
+
+# Processing time estimates (minutes) for a 90-second Reel
+# Used by diagnose.py to inform the user before they start
+time_estimates:
+  whisper:
+    tiny:   {cpu: 0.5,  gpu: 0.1}
+    base:   {cpu: 1.5,  gpu: 0.3}
+    small:  {cpu: 3.5,  gpu: 0.7}
+    medium: {cpu: 9.0,  gpu: 1.5}
+    large:  {cpu: 20.0, gpu: 3.0}
+  llm:
+    "gemma2:2b":   {cpu: 1.5, gpu: 0.5}
+    "gemma3:4b":   {cpu: 3.5, gpu: 1.2}
+    "phi3.5:mini": {cpu: 2.5, gpu: 0.8}
+    "phi3:mini":   {cpu: 2.5, gpu: 0.8}
+    "llama3.2:latest": {cpu: 3.0, gpu: 1.0}
+    "llama3.2:3b": {cpu: 3.0, gpu: 1.0}
+    "llama3.1:8b": {cpu: 8.0, gpu: 2.0}
+    "mistral:latest": {cpu: 4.5, gpu: 1.5}
+  cv_fixed: 1.5    # OpenCV + MediaPipe, roughly constant on CPU
+  other:    0.5    # FFmpeg extraction, feature fusion, assembly

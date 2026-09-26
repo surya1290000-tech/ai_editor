@@ -1,0 +1,45 @@
+# ─── AI Reel Editor — Dependencies ───────────────────────────────────────────
+# Python 3.11+ required
+# Install: pip install -r requirements.txt
+#
+# Note: FFmpeg must be installed separately and on PATH.
+#   Windows: https://www.gyan.dev/ffmpeg/builds/ (ffmpeg-release-essentials.zip)
+#   Extract and add the /bin folder to your system PATH.
+#
+# Note: Ollama must be installed separately for LLM analysis.
+#   https://ollama.com
+#   After install: ollama pull phi3.5:mini
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Core utilities ───────────────────────────────────────────────────────────
+psutil>=5.9.0              # CPU / RAM detection
+py-cpuinfo>=9.0.0          # Detailed CPU name detection
+requests>=2.31.0           # Ollama REST API communication
+loguru>=0.7.0              # Structured logging
+pyyaml>=6.0.0              # Config file parsing
+jinja2>=3.1.0              # HTML report generation
+pydantic>=2.0.0            # Schema validation (v2 required)
+python-dotenv>=1.0.0       # .env config loading
+python-multipart>=0.0.9    # File upload support in FastAPI
+
+# ─── Media extraction ─────────────────────────────────────────────────────────
+ffmpeg-python>=0.2.0       # FFmpeg Python wrapper (FFmpeg must be on PATH)
+
+# ─── Speech-to-text ───────────────────────────────────────────────────────────
+faster-whisper>=1.0.0      # CTranslate2-based Whisper (CPU-optimised, no torch needed)
+
+# ─── Audio analysis ───────────────────────────────────────────────────────────
+librosa>=0.10.0            # Audio feature extraction (RMS, pitch, tempo)
+soundfile>=0.12.0          # Audio file I/O backend for librosa
+numpy>=1.24.0              # Numerical operations
+
+# ─── Computer vision ──────────────────────────────────────────────────────────
+opencv-python>=4.8.0       # Frame analysis, optical flow, camera motion
+mediapipe>=0.10.0          # Face detection and tracking (CPU-optimised)
+
+# ─── Scene detection ──────────────────────────────────────────────────────────
+scenedetect>=0.6.3         # Shot boundary detection (uses opencv-python above)
+
+# ─── Timeline format (Agent 3, future) ───────────────────────────────────────
+# opentimelineio>=0.15.0   # DaVinci Resolve-compatible timeline export
+# Uncomment when Agent 3 implementation begins.

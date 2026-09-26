@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Reel Editor — Multi-Track Timeline Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/editor.css">
+</head>
+<body>
+    <div class="studio-layout">
+        <!-- Top Navigation Bar -->
+        <header class="studio-header">
+            <div class="header-left">
+                <div class="brand">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-name">AI REEL STUDIO</span>
+                    <span class="phase-badge">PHASE 6</span>
+                </div>
+                <div class="project-info">
+                    <span class="project-title" id="projectName">Surya.mp4</span>
+                    <div class="version-badge" id="versionBadge">v1 (AI Baseline)</div>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="history-controls">
+                    <button class="icon-btn" id="btnUndo" title="Undo (Ctrl+Z)" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+                    </button>
+                    <button class="icon-btn" id="btnRedo" title="Redo (Ctrl+Y)" disabled>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"/></svg>
+                    </button>
+                </div>
+                <div class="timecode-display" id="timecodeDisplay">00:00:00:00</div>
+            </div>
+
+            <div class="header-right">
+                <a href="/review" target="_blank" class="btn btn-ghost" title="Open Human Quality Review">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                    Quality Review
+                </a>
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" id="btnExportMenu">
+                        Export
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="dropdown-menu" id="exportDropdown">
+                        <a href="/api/editor/export/edl" class="dropdown-item" download="timeline.edl">Export CMX 3600 EDL (DaVinci)</a>
+                        <a href="/api/editor/export/srt" class="dropdown-item" download="subtitles.srt">Export Subtitles (SRT)</a>
+                        <a href="/api/editor/export/mp4" class="dropdown-item" download="final_reel.mp4">Download Rendered MP4</a>
+                    </div>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" id="btnRerenderMenu">
+                        <span class="btn-spinner" id="renderSpinner" style="display: none;"></span>
+                        ⚡ Re-Render
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="dropdown-menu" id="rerenderDropdown">
+                        <button class="dropdown-item" id="btnRerenderGraphics">
+                            <strong>Graphics Only (Fast)</strong>
+                            <small>Re-burn subtitles & cards (~3s)</small>
+                        </button>
+                        <button class="dropdown-item" id="btnRerenderAudio">
+                            <strong>Audio Only</strong>
+                            <small>Re-mix SFX & dialogue (~5s)</small>
+                        </button>
+                        <button class="dropdown-item" id="btnRerenderFull">
+                            <strong>Full Multi-Track Re-render</strong>
+                            <small>Re-calculate cuts & punch crops</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Middle Pane: Preview & Inspector -->
+        <main class="studio-main">
+            <!-- Video Player Stage -->
+            <section class="player-stage">
+                <div class="player-wrapper">
+                    <video id="videoPreview" preload="auto" playsinline>
+                        <source src="/api/workflow/download-video" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="player-overlay" id="playerOverlay"></div>
+                </div>
+
+                <div class="player-transport">
+                    <button class="icon-btn-lg" id="btnStepBack" title="Step Back 1 Frame">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+                    </button>
+                    <button class="icon-btn-lg play-btn" id="btnPlayPause" title="Play / Pause (Space)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="playIcon"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="pauseIcon" style="display: none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                    </button>
+                    <button class="icon-btn-lg" id="btnStepForward" title="Step Forward 1 Frame">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                    </button>
+                    <div class="duration-tag">
+                        <span id="currentTimeText">00:00.0</span> / <span id="totalDurationText">01:30.2</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sidebar: Inspector & Traceability -->
+            <aside class="studio-sidebar">
+                <div class="sidebar-tabs">
+                    <button class="tab-btn active" data-tab="inspector">Property Inspector</button>
+                    <button class="tab-btn" data-tab="trace">AI Decision Trace</button>
+                    <button class="tab-btn" data-tab="versions">Versions & History</button>
+                </div>
+
+                <!-- Tab 1: Inspector -->
+                <div class="tab-content active" id="tab-inspector">
+                    <div class="inspector-empty" id="inspectorEmpty">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 9l3 3-3 3"/></svg>
+                        <p>Select any clip or text event on the timeline to edit properties.</p>
+                    </div>
+
+                    <form class="inspector-form" id="inspectorForm" style="display: none;">
+                        <div class="form-header">
+                            <span class="badge" id="inspTrackType">TEXT</span>
+                            <span class="event-id" id="inspEventId">event_1</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Timing In & Out (Seconds)</label>
+                            <div class="input-row">
+                                <input type="number" id="inspTimeIn" step="0.01" min="0" placeholder="In">
+                                <span>to</span>
+                                <input type="number" id="inspTimeOut" step="0.01" min="0" placeholder="Out">
+                            </div>
+                        </div>
+
+                        <!-- Text/Caption Specific Fields -->
+                        <div class="field-group" id="fieldsText">
+                            <div class="form-group">
+                                <label>Text Content</label>
+                                <textarea id="inspTextContent" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Font Family & Size</label>
+                                <div class="input-row">
+                                    <select id="inspFontFamily">
+                                        <option value="Montserrat">Montserrat</option>
+                                        <option value="Outfit">Outfit</option>
+                                        <option value="Inter">Inter</option>
+                                        <option value="Nirmala UI">Nirmala UI (Telugu)</option>
+                                        <option value="Gautami">Gautami (Telugu)</option>
+                                    </select>
+                                    <input type="number" id="inspFontSize" min="20" max="160" value="84">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Colors (Text / Outline)</label>
+                                <div class="input-row">
+                                    <input type="color" id="inspTextColor" value="#ffffff">
+                                    <input type="color" id="inspOutlineColor" value="#000000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Video / Punch-In Specific Fields -->
+                        <div class="field-group" id="fieldsVideo" style="display: none;">
+                            <div class="form-group">
+                                <label>Punch Scale Factor</label>
+                                <input type="range" id="inspPunchScale" min="1.0" max="1.5" step="0.01" value="1.0">
+                                <div class="range-val" id="punchScaleVal">1.00x</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Face Anchor Coordinates</label>
+                                <div class="input-row">
+                                    <input type="number" id="inspAnchorX" step="0.01" min="0" max="1" placeholder="Center X">
+                                    <input type="number" id="inspAnchorY" step="0.01" min="0" max="1" placeholder="Center Y">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SFX / Audio Specific Fields -->
+                        <div class="field-group" id="fieldsAudio" style="display: none;">
+                            <div class="form-group">
+                                <label>Volume Gain (dB)</label>
+                                <input type="range" id="inspAudioVolume" min="0.0" max="1.5" step="0.05" value="0.2">
+                                <div class="range-val" id="audioVolumeVal">0.20 (-14dB)</div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="btnDeleteEvent">Remove Clip</button>
+                            <button type="submit" class="btn btn-primary" id="btnApplyChanges">Apply Changes (v2+)</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab 2: Decision Traceability -->
+                <div class="tab-content" id="tab-trace">
+                    <div class="trace-empty" id="traceEmpty">
+                        <p>Select an event to view its full AI editorial explainability chain.</p>
+                    </div>
+                    <div class="trace-chain" id="traceChain" style="display: none;">
+                        <div class="trace-node">
+                            <span class="trace-node-type">1. TIMELINE EVENT</span>
+                            <div class="trace-node-body" id="traceEventBody"></div>
+                        </div>
+                        <div class="trace-arrow">↓</div>
+                        <div class="trace-node">
+                            <span class="trace-node-type">2. AGENT 3 CREATIVE DECISION</span>
+                            <div class="trace-node-body" id="traceCreativeBody"></div>
+                        </div>
+                        <div class="trace-arrow">↓</div>
+                        <div class="trace-node">
+                            <span class="trace-node-type">3. AGENT 2 STORY DECISION</span>
+                            <div class="trace-node-body" id="traceStoryBody"></div>
+                        </div>
+                        <div class="trace-arrow">↓</div>
+                        <div class="trace-node">
+                            <span class="trace-node-type">4. EDITORIAL OPPORTUNITY</span>
+                            <div class="trace-node-body" id="traceOpportunityBody"></div>
+                        </div>
+                        <div class="trace-arrow">↓</div>
+                        <div class="trace-node">
+                            <span class="trace-node-type">5. AGENT 1 EVIDENCE & TRANSCRIPT</span>
+                            <div class="trace-node-body" id="traceEvidenceBody"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Versions & History -->
+                <div class="tab-content" id="tab-versions">
+                    <div class="version-history-list" id="versionHistoryList">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Bottom Multi-Track Timeline Canvas -->
+        <footer class="studio-timeline">
+            <div class="timeline-toolbar">
+                <div class="track-labels-col">
+                    <span class="toolbar-title">TRACKS</span>
+                </div>
+                <div class="timeline-ruler-wrap" id="rulerWrap">
+                    <canvas id="timelineRuler" height="24"></canvas>
+                </div>
+            </div>
+
+            <div class="timeline-body" id="timelineBody">
+                <!-- Track Labels -->
+                <div class="track-headers">
+                    <div class="track-header" data-track="TEXT">
+                        <span class="track-icon">🔤</span>
+                        <span class="track-name">TEXT / TITLES</span>
+                    </div>
+                    <div class="track-header" data-track="BROLL">
+                        <span class="track-icon">🎬</span>
+                        <span class="track-name">B-ROLL OVERLAY</span>
+                    </div>
+                    <div class="track-header" data-track="VIDEO">
+                        <span class="track-icon">📹</span>
+                        <span class="track-name">VIDEO / PUNCH-IN</span>
+                    </div>
+                    <div class="track-header" data-track="SFX">
+                        <span class="track-icon">🔔</span>
+                        <span class="track-name">SFX ACCENTS</span>
+                    </div>
+                    <div class="track-header" data-track="VOICE">
+                        <span class="track-icon">🎙️</span>
+                        <span class="track-name">MASTER VOICE</span>
+                    </div>
+                </div>
+
+                <!-- Tracks Canvas Container -->
+                <div class="tracks-viewport" id="tracksViewport">
+                    <div class="tracks-lane" id="laneText"></div>
+                    <div class="tracks-lane" id="laneBroll"></div>
+                    <div class="tracks-lane" id="laneVideo"></div>
+                    <div class="tracks-lane" id="laneSfx"></div>
+                    <div class="tracks-lane" id="laneVoice"></div>
+
+                    <!-- Playhead Needle -->
+                    <div class="playhead" id="playhead">
+                        <div class="playhead-handle"></div>
+                        <div class="playhead-line"></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="/static/editor.js"></script>
+</body>
+</html>

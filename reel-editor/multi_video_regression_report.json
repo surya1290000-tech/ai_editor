@@ -1,0 +1,706 @@
+{
+  "benchmark_timestamp": "2026-09-16 08:23:46",
+  "total_videos": 5,
+  "total_runtime_seconds": 212.92,
+  "results": [
+    {
+      "filename": "whatsapp_telugu_reel.mp4",
+      "path": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\inputs\\whatsapp_telugu_reel.mp4",
+      "size_mb": 10.33,
+      "status": "SUCCESS",
+      "pipeline_result": {
+        "source_video": "whatsapp_telugu_reel.mp4",
+        "output_dir": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\whatsapp_telugu_reel_20260916_082013_817a6e",
+        "duration_seconds": 66.167,
+        "runtime_seconds": 62.86,
+        "stage_timings": {
+          "media_extraction": 5.22,
+          "speech_extraction": 11.25,
+          "audio_features": 14.3,
+          "visual_cv": 5.21,
+          "smart_visual_sampling": 4.86,
+          "feature_fusion": 0.01,
+          "agent1_observer": 0.04,
+          "agent2_story_editor": 0.01,
+          "agent3_creative_director": 0.01,
+          "render_compiler": 14.36,
+          "critic_qa": 3.07,
+          "human_review_and_project": 2.3
+        },
+        "asr": {
+          "detected_language": null,
+          "total_words": 256,
+          "has_code_switching": false
+        },
+        "smart_sampling": {
+          "total_keyframes": 20,
+          "total_composites": 4
+        },
+        "agent1_evidence": {
+          "total_evidence": 45,
+          "total_opportunities": 14
+        },
+        "agent2_decisions": {
+          "accepted": 7,
+          "no_edit_spans": 5,
+          "rejected": 2
+        },
+        "agent3_creative": {
+          "style_profile": "EDITORIAL_CINEMATIC",
+          "total_decisions": 12,
+          "resolved_assets": 7,
+          "unresolved_assets": 0
+        },
+        "timeline": {
+          "duration": 62.207,
+          "clips_count": 7,
+          "text_events_count": 62
+        },
+        "render": {
+          "final_video": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\whatsapp_telugu_reel_20260916_082013_817a6e\\final_reel_edited.mp4",
+          "file_size_mb": 12.03
+        },
+        "critic_qa": {
+          "verdict": "PASS",
+          "overall_pass": true,
+          "total_checks": 6,
+          "passed_checks": 6,
+          "failed_checks": 0
+        },
+        "human_review": {
+          "report_html": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\whatsapp_telugu_reel_20260916_082013_817a6e\\human_quality_review\\human_quality_report.html",
+          "pacing_classification": "TOO_STATIC",
+          "major_edits_per_minute": 0.96,
+          "overall_story_value": 0.93,
+          "overall_naturalness_score": 0.88
+        }
+      },
+      "runtime": 62.87,
+      "matrix_row": {
+        "ASR": {
+          "status": "REVISE",
+          "note": "Low words (256) or unknown language (None)"
+        },
+        "language handling": {
+          "status": "REVISE",
+          "note": "Language detected as None"
+        },
+        "perception": {
+          "status": "PASS",
+          "note": "20 keyframes sampled, 4 filmstrips (<=20 budget adhered)"
+        },
+        "Agent 1": {
+          "status": "PASS",
+          "note": "45 evidence items, 14 opportunities"
+        },
+        "Agent 2": {
+          "status": "PASS",
+          "note": "7 accepted, 5 preserved holds, 2 rejected"
+        },
+        "Agent 3": {
+          "status": "PASS",
+          "note": "Profile: EDITORIAL_CINEMATIC (12 creative operations compiled)"
+        },
+        "asset resolution": {
+          "status": "PASS",
+          "note": "All 7 assets resolved (100%)"
+        },
+        "Timeline IR": {
+          "status": "PASS",
+          "note": "62.21s timeline, 7 primary clips"
+        },
+        "rendering": {
+          "status": "PASS",
+          "note": "MP4 rendered (12.03 MB)"
+        },
+        "technical QA": {
+          "status": "PASS",
+          "note": "6/6 forensic checks passed"
+        },
+        "editorial QA": {
+          "status": "PASS",
+          "note": "Pacing: TOO_STATIC, Story: 0.93, Nat: 0.88"
+        },
+        "runtime": {
+          "status": "PASS",
+          "note": "62.9s (0.95x realtime)"
+        }
+      },
+      "human_quality_diagnostics": {
+        "story_understanding": 0.93,
+        "editorial_appropriateness": 0.88,
+        "pacing_quality": "TOO_STATIC",
+        "naturalness": 0.88,
+        "over_editing_risk": "MEDIUM",
+        "caption_quality": "VERIFIED_BURNED",
+        "broll_relevance": "GROUNDED_INTENT",
+        "punch_in_appropriateness": "DISCIPLINED_MCU",
+        "sfx_appropriateness": "ACOUSTIC_SYNCED",
+        "note": "Automated diagnostics - diagnostic evaluation only; not human artistic proof."
+      }
+    },
+    {
+      "filename": "tripsync_travel_demo.mp4",
+      "path": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\inputs\\tripsync_travel_demo.mp4",
+      "size_mb": 10.89,
+      "status": "SUCCESS",
+      "pipeline_result": {
+        "source_video": "tripsync_travel_demo.mp4",
+        "output_dir": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tripsync_travel_demo_20260916_082116_9fc0ba",
+        "duration_seconds": 20.767,
+        "runtime_seconds": 18.6,
+        "stage_timings": {
+          "media_extraction": 2.91,
+          "speech_extraction": 1.18,
+          "audio_features": 3.39,
+          "visual_cv": 1.11,
+          "smart_visual_sampling": 3.23,
+          "feature_fusion": 0.0,
+          "agent1_observer": 0.01,
+          "agent2_story_editor": 0.01,
+          "agent3_creative_director": 0.0,
+          "render_compiler": 3.68,
+          "critic_qa": 1.13,
+          "human_review_and_project": 0.02
+        },
+        "asr": {
+          "detected_language": null,
+          "total_words": 0,
+          "has_code_switching": false
+        },
+        "smart_sampling": {
+          "total_keyframes": 7,
+          "total_composites": 1
+        },
+        "agent1_evidence": {
+          "total_evidence": 17,
+          "total_opportunities": 1
+        },
+        "agent2_decisions": {
+          "accepted": 0,
+          "no_edit_spans": 1,
+          "rejected": 0
+        },
+        "agent3_creative": {
+          "style_profile": "EDITORIAL_CINEMATIC",
+          "total_decisions": 1,
+          "resolved_assets": 0,
+          "unresolved_assets": 0
+        },
+        "timeline": {
+          "duration": 20.767,
+          "clips_count": 1,
+          "text_events_count": 0
+        },
+        "render": {
+          "final_video": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tripsync_travel_demo_20260916_082116_9fc0ba\\final_reel_edited.mp4",
+          "file_size_mb": 16.76
+        },
+        "critic_qa": {
+          "verdict": "PASS",
+          "overall_pass": true,
+          "total_checks": 1,
+          "passed_checks": 1,
+          "failed_checks": 0
+        },
+        "human_review": {
+          "report_html": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tripsync_travel_demo_20260916_082116_9fc0ba\\human_quality_review\\human_quality_report.html",
+          "pacing_classification": "TOO_STATIC",
+          "major_edits_per_minute": 0.0,
+          "overall_story_value": 0.85,
+          "overall_naturalness_score": 0.85
+        }
+      },
+      "runtime": 18.62,
+      "matrix_row": {
+        "ASR": {
+          "status": "REVISE",
+          "note": "Low words (0) or unknown language (None)"
+        },
+        "language handling": {
+          "status": "REVISE",
+          "note": "Language detected as None"
+        },
+        "perception": {
+          "status": "PASS",
+          "note": "7 keyframes sampled, 1 filmstrips (<=20 budget adhered)"
+        },
+        "Agent 1": {
+          "status": "PASS",
+          "note": "17 evidence items, 1 opportunities"
+        },
+        "Agent 2": {
+          "status": "PASS",
+          "note": "0 accepted, 1 preserved holds, 0 rejected"
+        },
+        "Agent 3": {
+          "status": "PASS",
+          "note": "Profile: EDITORIAL_CINEMATIC (1 creative operations compiled)"
+        },
+        "asset resolution": {
+          "status": "PASS",
+          "note": "All 0 assets resolved (100%)"
+        },
+        "Timeline IR": {
+          "status": "PASS",
+          "note": "20.77s timeline, 1 primary clips"
+        },
+        "rendering": {
+          "status": "PASS",
+          "note": "MP4 rendered (16.76 MB)"
+        },
+        "technical QA": {
+          "status": "PASS",
+          "note": "1/1 forensic checks passed"
+        },
+        "editorial QA": {
+          "status": "PASS",
+          "note": "Pacing: TOO_STATIC, Story: 0.85, Nat: 0.85"
+        },
+        "runtime": {
+          "status": "PASS",
+          "note": "18.6s (0.9x realtime)"
+        }
+      },
+      "human_quality_diagnostics": {
+        "story_understanding": 0.85,
+        "editorial_appropriateness": 0.7,
+        "pacing_quality": "TOO_STATIC",
+        "naturalness": 0.85,
+        "over_editing_risk": "LOW",
+        "caption_quality": "ABSENT",
+        "broll_relevance": "N/A",
+        "punch_in_appropriateness": "N/A",
+        "sfx_appropriateness": "ACOUSTIC_SYNCED",
+        "note": "Automated diagnostics - diagnostic evaluation only; not human artistic proof."
+      }
+    },
+    {
+      "filename": "tech_monologue_english.mp4",
+      "path": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\inputs\\tech_monologue_english.mp4",
+      "size_mb": 0.95,
+      "status": "SUCCESS",
+      "pipeline_result": {
+        "source_video": "tech_monologue_english.mp4",
+        "output_dir": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tech_monologue_english_20260916_082135_48215d",
+        "duration_seconds": 23.367,
+        "runtime_seconds": 49.94,
+        "stage_timings": {
+          "media_extraction": 6.04,
+          "speech_extraction": 6.31,
+          "audio_features": 6.91,
+          "visual_cv": 2.97,
+          "smart_visual_sampling": 12.21,
+          "feature_fusion": 0.01,
+          "agent1_observer": 0.06,
+          "agent2_story_editor": 0.02,
+          "agent3_creative_director": 0.03,
+          "render_compiler": 7.53,
+          "critic_qa": 2.72,
+          "human_review_and_project": 3.15
+        },
+        "asr": {
+          "detected_language": null,
+          "total_words": 42,
+          "has_code_switching": false
+        },
+        "smart_sampling": {
+          "total_keyframes": 10,
+          "total_composites": 4
+        },
+        "agent1_evidence": {
+          "total_evidence": 13,
+          "total_opportunities": 10
+        },
+        "agent2_decisions": {
+          "accepted": 6,
+          "no_edit_spans": 4,
+          "rejected": 1
+        },
+        "agent3_creative": {
+          "style_profile": "EDITORIAL_CINEMATIC",
+          "total_decisions": 10,
+          "resolved_assets": 6,
+          "unresolved_assets": 0
+        },
+        "timeline": {
+          "duration": 20.947,
+          "clips_count": 6,
+          "text_events_count": 14
+        },
+        "render": {
+          "final_video": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tech_monologue_english_20260916_082135_48215d\\final_reel_edited.mp4",
+          "file_size_mb": 0.75
+        },
+        "critic_qa": {
+          "verdict": "FAIL",
+          "overall_pass": false,
+          "total_checks": 5,
+          "passed_checks": 4,
+          "failed_checks": 1
+        },
+        "human_review": {
+          "report_html": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\tech_monologue_english_20260916_082135_48215d\\human_quality_review\\human_quality_report.html",
+          "pacing_classification": "BALANCED",
+          "major_edits_per_minute": 2.86,
+          "overall_story_value": 0.97,
+          "overall_naturalness_score": 0.88
+        }
+      },
+      "runtime": 49.95,
+      "matrix_row": {
+        "ASR": {
+          "status": "REVISE",
+          "note": "Low words (42) or unknown language (None)"
+        },
+        "language handling": {
+          "status": "REVISE",
+          "note": "Language detected as None"
+        },
+        "perception": {
+          "status": "PASS",
+          "note": "10 keyframes sampled, 4 filmstrips (<=20 budget adhered)"
+        },
+        "Agent 1": {
+          "status": "PASS",
+          "note": "13 evidence items, 10 opportunities"
+        },
+        "Agent 2": {
+          "status": "PASS",
+          "note": "6 accepted, 4 preserved holds, 1 rejected"
+        },
+        "Agent 3": {
+          "status": "PASS",
+          "note": "Profile: EDITORIAL_CINEMATIC (10 creative operations compiled)"
+        },
+        "asset resolution": {
+          "status": "PASS",
+          "note": "All 6 assets resolved (100%)"
+        },
+        "Timeline IR": {
+          "status": "PASS",
+          "note": "20.95s timeline, 6 primary clips"
+        },
+        "rendering": {
+          "status": "PASS",
+          "note": "MP4 rendered (0.75 MB)"
+        },
+        "technical QA": {
+          "status": "REVISE",
+          "note": "4/5 checks passed (Verdict: FAIL)"
+        },
+        "editorial QA": {
+          "status": "PASS",
+          "note": "Pacing: BALANCED, Story: 0.97, Nat: 0.88"
+        },
+        "runtime": {
+          "status": "PASS",
+          "note": "49.9s (2.14x realtime)"
+        }
+      },
+      "human_quality_diagnostics": {
+        "story_understanding": 0.97,
+        "editorial_appropriateness": 0.88,
+        "pacing_quality": "BALANCED",
+        "naturalness": 0.88,
+        "over_editing_risk": "LOW",
+        "caption_quality": "VERIFIED_BURNED",
+        "broll_relevance": "GROUNDED_INTENT",
+        "punch_in_appropriateness": "DISCIPLINED_MCU",
+        "sfx_appropriateness": "ACOUSTIC_SYNCED",
+        "note": "Automated diagnostics - diagnostic evaluation only; not human artistic proof."
+      }
+    },
+    {
+      "filename": "conversational_hindi_reel.mp4",
+      "path": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\inputs\\conversational_hindi_reel.mp4",
+      "size_mb": 4.49,
+      "status": "SUCCESS",
+      "pipeline_result": {
+        "source_video": "conversational_hindi_reel.mp4",
+        "output_dir": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\conversational_hindi_reel_20260916_082225_3cdb21",
+        "duration_seconds": 21.56,
+        "runtime_seconds": 53.55,
+        "stage_timings": {
+          "media_extraction": 7.78,
+          "speech_extraction": 7.07,
+          "audio_features": 7.51,
+          "visual_cv": 5.13,
+          "smart_visual_sampling": 9.69,
+          "feature_fusion": 0.02,
+          "agent1_observer": 0.05,
+          "agent2_story_editor": 0.02,
+          "agent3_creative_director": 0.03,
+          "render_compiler": 7.36,
+          "critic_qa": 3.39,
+          "human_review_and_project": 3.36
+        },
+        "asr": {
+          "detected_language": null,
+          "total_words": 42,
+          "has_code_switching": false
+        },
+        "smart_sampling": {
+          "total_keyframes": 6,
+          "total_composites": 3
+        },
+        "agent1_evidence": {
+          "total_evidence": 11,
+          "total_opportunities": 10
+        },
+        "agent2_decisions": {
+          "accepted": 6,
+          "no_edit_spans": 3,
+          "rejected": 1
+        },
+        "agent3_creative": {
+          "style_profile": "EDITORIAL_CINEMATIC",
+          "total_decisions": 9,
+          "resolved_assets": 6,
+          "unresolved_assets": 0
+        },
+        "timeline": {
+          "duration": 20.15,
+          "clips_count": 5,
+          "text_events_count": 15
+        },
+        "render": {
+          "final_video": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\conversational_hindi_reel_20260916_082225_3cdb21\\final_reel_edited.mp4",
+          "file_size_mb": 4.74
+        },
+        "critic_qa": {
+          "verdict": "PASS",
+          "overall_pass": true,
+          "total_checks": 7,
+          "passed_checks": 7,
+          "failed_checks": 0
+        },
+        "human_review": {
+          "report_html": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\conversational_hindi_reel_20260916_082225_3cdb21\\human_quality_review\\human_quality_report.html",
+          "pacing_classification": "BALANCED",
+          "major_edits_per_minute": 5.96,
+          "overall_story_value": 0.97,
+          "overall_naturalness_score": 0.89
+        }
+      },
+      "runtime": 53.57,
+      "matrix_row": {
+        "ASR": {
+          "status": "REVISE",
+          "note": "Low words (42) or unknown language (None)"
+        },
+        "language handling": {
+          "status": "REVISE",
+          "note": "Language detected as None"
+        },
+        "perception": {
+          "status": "PASS",
+          "note": "6 keyframes sampled, 3 filmstrips (<=20 budget adhered)"
+        },
+        "Agent 1": {
+          "status": "PASS",
+          "note": "11 evidence items, 10 opportunities"
+        },
+        "Agent 2": {
+          "status": "PASS",
+          "note": "6 accepted, 3 preserved holds, 1 rejected"
+        },
+        "Agent 3": {
+          "status": "PASS",
+          "note": "Profile: EDITORIAL_CINEMATIC (9 creative operations compiled)"
+        },
+        "asset resolution": {
+          "status": "PASS",
+          "note": "All 6 assets resolved (100%)"
+        },
+        "Timeline IR": {
+          "status": "PASS",
+          "note": "20.15s timeline, 5 primary clips"
+        },
+        "rendering": {
+          "status": "PASS",
+          "note": "MP4 rendered (4.74 MB)"
+        },
+        "technical QA": {
+          "status": "PASS",
+          "note": "7/7 forensic checks passed"
+        },
+        "editorial QA": {
+          "status": "PASS",
+          "note": "Pacing: BALANCED, Story: 0.97, Nat: 0.89"
+        },
+        "runtime": {
+          "status": "PASS",
+          "note": "53.5s (2.48x realtime)"
+        }
+      },
+      "human_quality_diagnostics": {
+        "story_understanding": 0.97,
+        "editorial_appropriateness": 0.88,
+        "pacing_quality": "BALANCED",
+        "naturalness": 0.89,
+        "over_editing_risk": "LOW",
+        "caption_quality": "VERIFIED_BURNED",
+        "broll_relevance": "GROUNDED_INTENT",
+        "punch_in_appropriateness": "DISCIPLINED_MCU",
+        "sfx_appropriateness": "ACOUSTIC_SYNCED",
+        "note": "Automated diagnostics - diagnostic evaluation only; not human artistic proof."
+      }
+    },
+    {
+      "filename": "rapid_hook_reel.mp4",
+      "path": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\inputs\\rapid_hook_reel.mp4",
+      "size_mb": 4.52,
+      "status": "SUCCESS",
+      "pipeline_result": {
+        "source_video": "rapid_hook_reel.mp4",
+        "output_dir": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\rapid_hook_reel_20260916_082318_5c134d",
+        "duration_seconds": 12.0,
+        "runtime_seconds": 27.89,
+        "stage_timings": {
+          "media_extraction": 2.43,
+          "speech_extraction": 5.4,
+          "audio_features": 3.56,
+          "visual_cv": 1.55,
+          "smart_visual_sampling": 6.24,
+          "feature_fusion": 0.02,
+          "agent1_observer": 0.05,
+          "agent2_story_editor": 0.02,
+          "agent3_creative_director": 0.02,
+          "render_compiler": 4.6,
+          "critic_qa": 1.32,
+          "human_review_and_project": 0.52
+        },
+        "asr": {
+          "detected_language": null,
+          "total_words": 20,
+          "has_code_switching": false
+        },
+        "smart_sampling": {
+          "total_keyframes": 5,
+          "total_composites": 4
+        },
+        "agent1_evidence": {
+          "total_evidence": 11,
+          "total_opportunities": 3
+        },
+        "agent2_decisions": {
+          "accepted": 1,
+          "no_edit_spans": 1,
+          "rejected": 1
+        },
+        "agent3_creative": {
+          "style_profile": "EDITORIAL_CINEMATIC",
+          "total_decisions": 2,
+          "resolved_assets": 1,
+          "unresolved_assets": 0
+        },
+        "timeline": {
+          "duration": 12.0,
+          "clips_count": 1,
+          "text_events_count": 8
+        },
+        "render": {
+          "final_video": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\rapid_hook_reel_20260916_082318_5c134d\\final_reel_edited.mp4",
+          "file_size_mb": 8.36
+        },
+        "critic_qa": {
+          "verdict": "PASS",
+          "overall_pass": true,
+          "total_checks": 2,
+          "passed_checks": 2,
+          "failed_checks": 0
+        },
+        "human_review": {
+          "report_html": "C:\\Users\\ASUS\\Desktop\\ai-editor\\reel-editor\\outputs\\rapid_hook_reel_20260916_082318_5c134d\\human_quality_review\\human_quality_report.html",
+          "pacing_classification": "BALANCED",
+          "major_edits_per_minute": 5.0,
+          "overall_story_value": 0.98,
+          "overall_naturalness_score": 0.9
+        }
+      },
+      "runtime": 27.91,
+      "matrix_row": {
+        "ASR": {
+          "status": "REVISE",
+          "note": "Low words (20) or unknown language (None)"
+        },
+        "language handling": {
+          "status": "REVISE",
+          "note": "Language detected as None"
+        },
+        "perception": {
+          "status": "PASS",
+          "note": "5 keyframes sampled, 4 filmstrips (<=20 budget adhered)"
+        },
+        "Agent 1": {
+          "status": "PASS",
+          "note": "11 evidence items, 3 opportunities"
+        },
+        "Agent 2": {
+          "status": "PASS",
+          "note": "1 accepted, 1 preserved holds, 1 rejected"
+        },
+        "Agent 3": {
+          "status": "PASS",
+          "note": "Profile: EDITORIAL_CINEMATIC (2 creative operations compiled)"
+        },
+        "asset resolution": {
+          "status": "PASS",
+          "note": "All 1 assets resolved (100%)"
+        },
+        "Timeline IR": {
+          "status": "PASS",
+          "note": "12.00s timeline, 1 primary clips"
+        },
+        "rendering": {
+          "status": "PASS",
+          "note": "MP4 rendered (8.36 MB)"
+        },
+        "technical QA": {
+          "status": "PASS",
+          "note": "2/2 forensic checks passed"
+        },
+        "editorial QA": {
+          "status": "PASS",
+          "note": "Pacing: BALANCED, Story: 0.98, Nat: 0.90"
+        },
+        "runtime": {
+          "status": "PASS",
+          "note": "27.9s (2.32x realtime)"
+        }
+      },
+      "human_quality_diagnostics": {
+        "story_understanding": 0.98,
+        "editorial_appropriateness": 0.88,
+        "pacing_quality": "BALANCED",
+        "naturalness": 0.9,
+        "over_editing_risk": "LOW",
+        "caption_quality": "VERIFIED_BURNED",
+        "broll_relevance": "GROUNDED_INTENT",
+        "punch_in_appropriateness": "DISCIPLINED_MCU",
+        "sfx_appropriateness": "ACOUSTIC_SYNCED",
+        "note": "Automated diagnostics - diagnostic evaluation only; not human artistic proof."
+      }
+    }
+  ],
+  "subsystem_evaluations": {
+    "ASR": [
+      "whatsapp_telugu_reel.mp4: Low words (256) or unknown language (None)",
+      "tripsync_travel_demo.mp4: Low words (0) or unknown language (None)",
+      "tech_monologue_english.mp4: Low words (42) or unknown language (None)",
+      "conversational_hindi_reel.mp4: Low words (42) or unknown language (None)",
+      "rapid_hook_reel.mp4: Low words (20) or unknown language (None)"
+    ],
+    "language handling": [
+      "whatsapp_telugu_reel.mp4: Language detected as None",
+      "tripsync_travel_demo.mp4: Language detected as None",
+      "tech_monologue_english.mp4: Language detected as None",
+      "conversational_hindi_reel.mp4: Language detected as None",
+      "rapid_hook_reel.mp4: Language detected as None"
+    ],
+    "technical QA": [
+      "tech_monologue_english.mp4: 4/5 checks passed (Verdict: FAIL)"
+    ]
+  }
+}

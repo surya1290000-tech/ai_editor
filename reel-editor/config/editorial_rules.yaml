@@ -1,0 +1,180 @@
+# ─── Editorial Rules ──────────────────────────────────────────────────────────
+#
+# These are the tunable thresholds for the opportunity detection engine.
+# All values can be adjusted after testing on real content.
+# Higher = more conservative (fewer opportunities flagged).
+# Lower = more liberal (more opportunities flagged).
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+# ─── Pause Classification ─────────────────────────────────────────────────────
+pause_classification:
+
+  # Silence shorter than this in the middle of a sentence = dead space candidate
+  dead_space_max_duration_seconds: 0.40
+
+  # Silence this long at a sentence boundary, with high energy before = rhetorical
+  rhetorical_min_duration_seconds: 0.50
+
+  # Silence this long with narrative context of emotional peak = emotional hold
+  emotional_min_duration_seconds: 0.70
+
+  # Silence this long = likely technical interruption (camera bumped, etc.)
+  technical_break_min_seconds: 2.00
+
+  # Energy must be this multiple of speaker baseline to trigger rhetorical classification
+  preceding_energy_threshold_multiplier: 1.15
+
+  # Filler words list (add more as needed for your speech patterns)
+  filler_words:
+    - "um"
+    - "uh"
+    - "like"
+    - "basically"
+    - "you know"
+    - "so"
+    - "actually"
+    - "right"
+    - "I mean"
+    - "kind of"
+    - "sort of"
+    - "you see"
+    - "okay so"
+    - "literally"
+    - "honestly"
+    # Hinglish fillers
+    - "matlab"
+    - "woh"
+    - "bas"
+    - "toh"
+    - "na"
+    - "yaar"
+    - "acha"
+
+
+# ─── Emphasis Score Weights ───────────────────────────────────────────────────
+# These four signals are combined to compute per-word emphasis score (0.0–1.0)
+# Weights must sum to 1.0
+emphasis_weights:
+  energy_deviation: 0.35     # How much louder than speaker baseline
+  pitch_deviation:  0.25     # How much higher/lower than speaker baseline pitch
+  rate_slowdown:    0.20     # How much slower the word/syllable is spoken
+  pause_proximity:  0.20     # Silence within ±0.3s of this word
+
+
+# ─── Opportunity Detection Thresholds ────────────────────────────────────────
+opportunity_thresholds:
+
+  cut_opportunity:
+    min_filler_word_count: 2        # Minimum filler words in sentence to qualify
+    min_dead_space_duration: 0.40   # Minimum silence to flag as cuttable
+    max_emotional_intensity: 0.35   # Don't flag cuts in emotionally important moments
+    min_confidence: 0.50
+
+  pacing_hold:
+    min_pause_duration: 0.50        # Only flag pauses this long or longer
+    min_emotional_or_rhetorical: true  # Must be classified as rhetorical or emotional
+    min_confidence: 0.55
+
+  punch_in_opportunity:
+    min_emphasis_score: 0.60        # Word must have at least this emphasis to qualify
+    min_stability_score: 0.65       # Camera must be this stable (1.0 = perfectly static)
+    max_emotional_intensity: 0.70   # Don't punch in on vulnerable emotional moments
+    min_confidence: 0.55
+
+  broll_opportunity:
+    min_duration_seconds: 2.5       # Minimum window to fit B-roll
+    max_emotional_intensity: 0.65   # Don't cover emotionally significant moments
+    allowed_information_types:      # Only these sentence types qualify
+      - concrete_fact
+      - evidence
+      - comparison
+      - sequence
+      - context
+    min_confidence: 0.50
+
+  text_emphasis_opportunity:
+    min_emphasis_score: 0.65        # Word emphasis score threshold
+    max_emotional_intensity: 0.75   # Don't emphasize text on vulnerable moments
+    min_confidence: 0.55
+
+  concept_visualization_opportunity:
+    required_visual_potential: medium  # Minimum: medium or high
+    max_emotional_intensity: 0.60   # Abstract concepts during emotional peaks are still emotional
+    min_confidence: 0.55
+
+  no_edit_recommendation:
+    min_emotional_intensity: 0.75   # Primary trigger
+    # Also triggers on: narrative_role = emotional_peak, information_type = personal_statement
+    # with emotional_intensity > 0.55
+    min_confidence: 0.60
+
+  comprehension_concern:
+    min_information_density: 0.70   # Must be high-density content
+    must_be_abstract: true          # Abstract content only (concrete facts are easier to follow)
+    min_confidence: 0.50
+
+
+# ─── Confidence Computation ───────────────────────────────────────────────────
+confidence:
+  # LLM language confidence below this = downgrade all LLM-dependent opportunity scores
+  hinglish_confidence_penalty_threshold: 0.70
+
+  # If LLM analysis fails entirely, set all LLM-dependent opportunities to this max
+  llm_unavailable_max_confidence: 0.55
+
+  # Number of times to retry an LLM call before marking analysis as failed
+  llm_retry_count: 3
+
+  # JSON validation failure messages to include in retry prompt
+  include_validation_error_in_retry: true
+
+
+# ─── Quality Warning Thresholds ───────────────────────────────────────────────
+quality_warnings:
+
+  audio:
+    noise_floor_db_threshold: -45.0       # Noisier than this = moderate background noise
+    clipping_threshold: 0.98              # Samples above this amplitude = clipping
+    low_speech_ratio_threshold: 0.40      # Less than 40% speech in video = warning
+
+  video:
+    underexposure_brightness_threshold: 55     # Mean brightness below this = dark
+    overexposure_brightness_threshold: 205     # Mean brightness above this = overexposed
+    blur_sharpness_threshold: 50.0             # Laplacian variance below this = soft/blurry
+    non_native_aspect_ratio_tolerance: 0.05   # Tolerance for 9:16 check
+
+  transcript:
+    low_word_confidence_threshold: 0.75        # Words below this = low confidence
+    low_confidence_sentence_ratio: 0.30        # 30%+ low-confidence words in sentence = flag
+
+
+# ─── Restraint Notes ──────────────────────────────────────────────────────────
+# These are NOT implemented as suppression rules (that's Agent 2's job).
+# They are recorded as opposing_signals in opportunity evidence,
+# which influences confidence scores.
+restraint_opposing_signals:
+  - name: "recent_same_type"
+    description: "Same opportunity type occurred within X seconds"
+    applies_to: [punch_in_opportunity, broll_opportunity, text_emphasis_opportunity]
+    recency_window_seconds: 8.0
+    confidence_penalty: 0.20     # Subtract this from confidence
+
+  - name: "very_short_duration"
+    description: "Window is too short for the proposed treatment"
+    applies_to: [broll_opportunity, concept_visualization_opportunity]
+    min_viable_duration: 2.5
+    confidence_penalty: 0.25
+
+  - name: "personal_statement_with_broll"
+    description: "Speaker making a personal statement — B-roll distances viewer"
+    applies_to: [broll_opportunity]
+    trigger: "information_type == personal_statement"
+    confidence_penalty: 0.40
+
+  - name: "emotional_peak_with_visual"
+    description: "Emotional peak — visual changes compete with speaker"
+    applies_to: [punch_in_opportunity, broll_opportunity, text_emphasis_opportunity,
+                 concept_visualization_opportunity]
+    trigger: "emotional_intensity > 0.70"
+    confidence_penalty: 0.50

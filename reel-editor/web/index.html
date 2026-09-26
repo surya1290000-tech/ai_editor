@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Reel Editor — Workflow Canvas</title>
+    <meta name="description" content="Visual node-based workflow editor for AI-powered Instagram Reel analysis">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/canvas.css">
+</head>
+<body>
+
+<!-- ═══ Top Bar ═══ -->
+<header id="topbar">
+    <div class="topbar-left">
+        <span class="logo-icon">🎬</span>
+        <h1 class="logo-text">AI Reel Editor</h1>
+        <span class="divider">│</span>
+        <span class="pipeline-name" id="pipeline-name">Reel Analysis Pipeline</span>
+    </div>
+    <div class="topbar-center">
+        <div class="status-pill" id="workflow-status">
+            <span class="status-dot"></span>
+            <span class="status-text">Idle</span>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <input type="file" id="file-upload-input" accept="video/mp4,video/quicktime,video/x-matroska,video/webm" style="display:none;" />
+        <button class="btn btn-secondary" id="btn-upload" title="Upload Raw Video">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Upload Video</span>
+        </button>
+        <button class="btn btn-run" id="btn-run" title="Run Pipeline">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>
+            <span>Run</span>
+        </button>
+        <button class="btn btn-cancel hidden" id="btn-cancel" title="Cancel">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>
+            <span>Cancel</span>
+        </button>
+        <a href="/api/workflow/download-video" class="btn btn-download hidden" id="btn-download-video" title="Download Final Edited Reel" download="final_reel_edited.mp4">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Video</span>
+        </a>
+        <button class="btn btn-ghost" id="btn-fit" title="Fit to View">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 2v3H2M11 2v3h3M5 14v-3H2M11 14v-3h3"/></svg>
+        </button>
+    </div>
+</header>
+
+<!-- ═══ Canvas ═══ -->
+<main id="canvas-container">
+    <svg id="edge-layer" class="edge-layer"></svg>
+    <div id="node-layer" class="node-layer"></div>
+
+    <!-- Minimap -->
+    <div id="minimap" class="minimap">
+        <canvas id="minimap-canvas"></canvas>
+    </div>
+
+    <!-- Zoom display -->
+    <div class="zoom-display" id="zoom-display">100%</div>
+</main>
+
+<!-- ═══ Inspector Panel ═══ -->
+<aside id="inspector" class="inspector closed">
+    <div class="inspector-header">
+        <div class="inspector-title-group">
+            <span class="inspector-icon" id="inspector-icon">📦</span>
+            <h2 id="inspector-title">Node Details</h2>
+        </div>
+        <button class="btn btn-ghost inspector-close" id="inspector-close">✕</button>
+    </div>
+    <div class="inspector-body" id="inspector-body">
+        <!-- Dynamically populated -->
+    </div>
+</aside>
+
+<!-- ═══ Run Dialog ═══ -->
+<div class="dialog-overlay hidden" id="run-dialog-overlay">
+    <div class="dialog" id="run-dialog">
+        <h3>Run Pipeline</h3>
+        <label for="video-path-input">Video file path:</label>
+        <input type="text" id="video-path-input" placeholder="e.g. Surya.mp4" value="Surya.mp4" />
+        <div class="dialog-actions">
+            <button class="btn btn-ghost" id="run-dialog-cancel">Cancel</button>
+            <button class="btn btn-run" id="run-dialog-confirm">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>
+                Start
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="/static/canvas.js"></script>
+</body>
+</html>

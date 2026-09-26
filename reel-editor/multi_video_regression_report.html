@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Multi-Video Regression Matrix</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --surface: #111827;
+            --surface-border: #1f2937;
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+            --pass-bg: #064e3b;
+            --pass-text: #34d399;
+            --fail-bg: #7f1d1d;
+            --fail-text: #f87171;
+            --revise-bg: #78350f;
+            --revise-text: #fbbf24;
+            --unresolved-bg: #374151;
+            --unresolved-text: #9ca3af;
+            --accent: #38bdf8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 40px 20px; }
+        .container { max-width: 1500px; margin: 0 auto; }
+        header { margin-bottom: 30px; border-bottom: 1px solid var(--surface-border); padding-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { font-size: 1.8rem; font-weight: 800; color: #fff; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
+        .kpi-bar { display: flex; gap: 20px; }
+        .kpi { background: var(--surface); border: 1px solid var(--surface-border); padding: 12px 20px; border-radius: 8px; text-align: center; }
+        .kpi-num { font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+        .kpi-lbl { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
+
+        .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--surface-border); border-radius: 12px; margin-bottom: 40px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+        th, td { padding: 14px 12px; border-bottom: 1px solid var(--surface-border); vertical-align: top; }
+        th { background: #0f172a; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; white-space: nowrap; }
+        .video-cell { font-size: 0.9rem; min-width: 180px; position: sticky; left: 0; background: var(--surface); }
+        .video-cell .meta { color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; }
+        .cell-status { min-width: 120px; }
+        .cell-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; line-height: 1.3; }
+        .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.04em; }
+        .badge-pass { background: var(--pass-bg); color: var(--pass-text); }
+        .badge-fail { background: var(--fail-bg); color: var(--fail-text); }
+        .badge-revise { background: var(--revise-bg); color: var(--revise-text); }
+        .badge-unresolved { background: var(--unresolved-bg); color: var(--unresolved-text); }
+
+        h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; }
+        .section { margin-bottom: 40px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+        .card { background: var(--surface); border: 1px solid var(--surface-border); border-radius: 10px; padding: 18px; }
+        .card.warning { border-left: 4px solid var(--revise-text); }
+        .card.success { border-left: 4px solid var(--pass-text); }
+        .card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--accent); }
+        .card ul { list-style-position: inside; color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
+        .hq-card { background: var(--surface); border: 1px solid var(--surface-border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+        .hq-card h4 { font-size: 0.95rem; margin-bottom: 10px; color: #fff; }
+        .hq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 0.82rem; color: var(--text-muted); }
+        .hq-grid span { color: #94a3b8; }
+        .hq-grid strong { color: #f8fafc; font-weight: 600; margin-left: 4px; }
+        .hq-disclaimer { font-size: 0.72rem; color: #64748b; font-style: italic; margin-top: 10px; border-top: 1px solid #1e293b; padding-top: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Multi-Video Generalization & Robustness Benchmark</h1>
+                <div class="subtitle">Autonomous AI Reel Production Pipeline (Version 3.5.0) | Zero inter-run code modification</div>
+            </div>
+            <div class="kpi-bar">
+                <div class="kpi">
+                    <div class="kpi-num">5</div>
+                    <div class="kpi-lbl">Videos Tested</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-num">212.92s</div>
+                    <div class="kpi-lbl">Total Runtime</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Video Source</th>
+                        <th>ASR</th><th>language handling</th><th>perception</th><th>Agent 1</th><th>Agent 2</th><th>Agent 3</th><th>asset resolution</th><th>Timeline IR</th><th>rendering</th><th>technical QA</th><th>editorial QA</th><th>runtime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr>
+            <td class="video-cell">
+                <strong>whatsapp_telugu_reel.mp4</strong>
+                <div class="meta">10.33 MB | 62.87s</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Low words (256) or unknown language (None)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Language detected as None</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">20 keyframes sampled, 4 filmstrips (<=20 budget adhered)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">45 evidence items, 14 opportunities</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">7 accepted, 5 preserved holds, 2 rejected</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Profile: EDITORIAL_CINEMATIC (12 creative operations compiled)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">All 7 assets resolved (100%)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">62.21s timeline, 7 primary clips</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">MP4 rendered (12.03 MB)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">6/6 forensic checks passed</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Pacing: TOO_STATIC, Story: 0.93, Nat: 0.88</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">62.9s (0.95x realtime)</div>
+            </td>
+            
+        </tr>
+        
+        <tr>
+            <td class="video-cell">
+                <strong>tripsync_travel_demo.mp4</strong>
+                <div class="meta">10.89 MB | 18.62s</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Low words (0) or unknown language (None)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Language detected as None</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">7 keyframes sampled, 1 filmstrips (<=20 budget adhered)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">17 evidence items, 1 opportunities</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">0 accepted, 1 preserved holds, 0 rejected</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Profile: EDITORIAL_CINEMATIC (1 creative operations compiled)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">All 0 assets resolved (100%)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">20.77s timeline, 1 primary clips</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">MP4 rendered (16.76 MB)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">1/1 forensic checks passed</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Pacing: TOO_STATIC, Story: 0.85, Nat: 0.85</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">18.6s (0.9x realtime)</div>
+            </td>
+            
+        </tr>
+        
+        <tr>
+            <td class="video-cell">
+                <strong>tech_monologue_english.mp4</strong>
+                <div class="meta">0.95 MB | 49.95s</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Low words (42) or unknown language (None)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Language detected as None</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">10 keyframes sampled, 4 filmstrips (<=20 budget adhered)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">13 evidence items, 10 opportunities</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">6 accepted, 4 preserved holds, 1 rejected</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Profile: EDITORIAL_CINEMATIC (10 creative operations compiled)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">All 6 assets resolved (100%)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">20.95s timeline, 6 primary clips</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">MP4 rendered (0.75 MB)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">4/5 checks passed (Verdict: FAIL)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Pacing: BALANCED, Story: 0.97, Nat: 0.88</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">49.9s (2.14x realtime)</div>
+            </td>
+            
+        </tr>
+        
+        <tr>
+            <td class="video-cell">
+                <strong>conversational_hindi_reel.mp4</strong>
+                <div class="meta">4.49 MB | 53.57s</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Low words (42) or unknown language (None)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Language detected as None</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">6 keyframes sampled, 3 filmstrips (<=20 budget adhered)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">11 evidence items, 10 opportunities</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">6 accepted, 3 preserved holds, 1 rejected</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Profile: EDITORIAL_CINEMATIC (9 creative operations compiled)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">All 6 assets resolved (100%)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">20.15s timeline, 5 primary clips</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">MP4 rendered (4.74 MB)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">7/7 forensic checks passed</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Pacing: BALANCED, Story: 0.97, Nat: 0.89</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">53.5s (2.48x realtime)</div>
+            </td>
+            
+        </tr>
+        
+        <tr>
+            <td class="video-cell">
+                <strong>rapid_hook_reel.mp4</strong>
+                <div class="meta">4.52 MB | 27.91s</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Low words (20) or unknown language (None)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-revise">REVISE</span>
+                <div class="cell-note">Language detected as None</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">5 keyframes sampled, 4 filmstrips (<=20 budget adhered)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">11 evidence items, 3 opportunities</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">1 accepted, 1 preserved holds, 1 rejected</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Profile: EDITORIAL_CINEMATIC (2 creative operations compiled)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">All 1 assets resolved (100%)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">12.00s timeline, 1 primary clips</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">MP4 rendered (8.36 MB)</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">2/2 forensic checks passed</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">Pacing: BALANCED, Story: 0.98, Nat: 0.90</div>
+            </td>
+            
+            <td class="cell-status">
+                <span class="badge badge-pass">PASS</span>
+                <div class="cell-note">27.9s (2.32x realtime)</div>
+            </td>
+            
+        </tr>
+        
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Subsystem Failure & Revision Analysis</h2>
+            <div class="cards-grid">
+                
+            <div class="card warning">
+                <h3>ASR</h3>
+                <ul><li>whatsapp_telugu_reel.mp4: Low words (256) or unknown language (None)</li><li>tripsync_travel_demo.mp4: Low words (0) or unknown language (None)</li><li>tech_monologue_english.mp4: Low words (42) or unknown language (None)</li><li>conversational_hindi_reel.mp4: Low words (42) or unknown language (None)</li><li>rapid_hook_reel.mp4: Low words (20) or unknown language (None)</li></ul>
+            </div>
+            
+            <div class="card warning">
+                <h3>language handling</h3>
+                <ul><li>whatsapp_telugu_reel.mp4: Language detected as None</li><li>tripsync_travel_demo.mp4: Language detected as None</li><li>tech_monologue_english.mp4: Language detected as None</li><li>conversational_hindi_reel.mp4: Language detected as None</li><li>rapid_hook_reel.mp4: Language detected as None</li></ul>
+            </div>
+            
+            <div class="card warning">
+                <h3>technical QA</h3>
+                <ul><li>tech_monologue_english.mp4: 4/5 checks passed (Verdict: FAIL)</li></ul>
+            </div>
+            
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Human-Quality Automated Diagnostics (Informational Only)</h2>
+            
+            <div class="hq-card">
+                <h4>whatsapp_telugu_reel.mp4</h4>
+                <div class="hq-grid">
+                    <div><span>Story Understanding:</span> <strong>0.93</strong></div>
+                    <div><span>Naturalness:</span> <strong>0.88</strong></div>
+                    <div><span>Pacing Quality:</span> <strong>TOO_STATIC</strong></div>
+                    <div><span>Over-Editing Risk:</span> <strong>MEDIUM</strong></div>
+                    <div><span>Caption Quality:</span> <strong>VERIFIED_BURNED</strong></div>
+                    <div><span>B-Roll Relevance:</span> <strong>GROUNDED_INTENT</strong></div>
+                </div>
+                <div class="hq-disclaimer">Automated diagnostics - diagnostic evaluation only; not human artistic proof.</div>
+            </div>
+            
+            <div class="hq-card">
+                <h4>tripsync_travel_demo.mp4</h4>
+                <div class="hq-grid">
+                    <div><span>Story Understanding:</span> <strong>0.85</strong></div>
+                    <div><span>Naturalness:</span> <strong>0.85</strong></div>
+                    <div><span>Pacing Quality:</span> <strong>TOO_STATIC</strong></div>
+                    <div><span>Over-Editing Risk:</span> <strong>LOW</strong></div>
+                    <div><span>Caption Quality:</span> <strong>ABSENT</strong></div>
+                    <div><span>B-Roll Relevance:</span> <strong>N/A</strong></div>
+                </div>
+                <div class="hq-disclaimer">Automated diagnostics - diagnostic evaluation only; not human artistic proof.</div>
+            </div>
+            
+            <div class="hq-card">
+                <h4>tech_monologue_english.mp4</h4>
+                <div class="hq-grid">
+                    <div><span>Story Understanding:</span> <strong>0.97</strong></div>
+                    <div><span>Naturalness:</span> <strong>0.88</strong></div>
+                    <div><span>Pacing Quality:</span> <strong>BALANCED</strong></div>
+                    <div><span>Over-Editing Risk:</span> <strong>LOW</strong></div>
+                    <div><span>Caption Quality:</span> <strong>VERIFIED_BURNED</strong></div>
+                    <div><span>B-Roll Relevance:</span> <strong>GROUNDED_INTENT</strong></div>
+                </div>
+                <div class="hq-disclaimer">Automated diagnostics - diagnostic evaluation only; not human artistic proof.</div>
+            </div>
+            
+            <div class="hq-card">
+                <h4>conversational_hindi_reel.mp4</h4>
+                <div class="hq-grid">
+                    <div><span>Story Understanding:</span> <strong>0.97</strong></div>
+                    <div><span>Naturalness:</span> <strong>0.89</strong></div>
+                    <div><span>Pacing Quality:</span> <strong>BALANCED</strong></div>
+                    <div><span>Over-Editing Risk:</span> <strong>LOW</strong></div>
+                    <div><span>Caption Quality:</span> <strong>VERIFIED_BURNED</strong></div>
+                    <div><span>B-Roll Relevance:</span> <strong>GROUNDED_INTENT</strong></div>
+                </div>
+                <div class="hq-disclaimer">Automated diagnostics - diagnostic evaluation only; not human artistic proof.</div>
+            </div>
+            
+            <div class="hq-card">
+                <h4>rapid_hook_reel.mp4</h4>
+                <div class="hq-grid">
+                    <div><span>Story Understanding:</span> <strong>0.98</strong></div>
+                    <div><span>Naturalness:</span> <strong>0.9</strong></div>
+                    <div><span>Pacing Quality:</span> <strong>BALANCED</strong></div>
+                    <div><span>Over-Editing Risk:</span> <strong>LOW</strong></div>
+                    <div><span>Caption Quality:</span> <strong>VERIFIED_BURNED</strong></div>
+                    <div><span>B-Roll Relevance:</span> <strong>GROUNDED_INTENT</strong></div>
+                </div>
+                <div class="hq-disclaimer">Automated diagnostics - diagnostic evaluation only; not human artistic proof.</div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
